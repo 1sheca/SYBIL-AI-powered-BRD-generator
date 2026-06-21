@@ -1,0 +1,238 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Terminal Noir — Light Mode */
+    --background: 40 7% 95%;
+    --foreground: 0 0% 4%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 4%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 4%;
+    --primary: 18 100% 59%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 40 7% 92%;
+    --secondary-foreground: 0 0% 4%;
+    --muted: 40 7% 92%;
+    --muted-foreground: 0 0% 45%;
+    --accent: 40 7% 92%;
+    --accent-foreground: 0 0% 4%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 0 0% 83%;
+    --input: 0 0% 83%;
+    --ring: 18 100% 59%;
+    --radius: 0px;
+
+    --success: 142 71% 45%;
+    --warning: 48 96% 53%;
+  }
+
+  .dark {
+    /* Terminal Noir — Dark Mode (PRIMARY) */
+    --background: 0 0% 4%;
+    --foreground: 0 0% 91%;
+    --card: 0 0% 8%;
+    --card-foreground: 0 0% 91%;
+    --popover: 0 0% 8%;
+    --popover-foreground: 0 0% 91%;
+    --primary: 18 100% 59%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 0 0% 11%;
+    --secondary-foreground: 0 0% 91%;
+    --muted: 0 0% 11%;
+    --muted-foreground: 0 0% 45%;
+    --accent: 0 0% 11%;
+    --accent-foreground: 0 0% 91%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 0 0% 16%;
+    --input: 0 0% 16%;
+    --ring: 18 100% 59%;
+
+    --success: 142 71% 45%;
+    --warning: 48 96% 53%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground font-sans;
+  }
+}
+
+/* Custom scrollbar — sharp, minimal */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-border;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-muted-foreground/50;
+}
+
+/* Smooth transitions for colors only */
+* {
+  transition-property: color, background-color, border-color, outline-color;
+  transition-duration: 150ms;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Terminal cursor loading animation */
+@keyframes terminal-blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+.terminal-cursor {
+  display: inline-block;
+  width: 8px;
+  height: 2px;
+  background-color: hsl(var(--primary));
+  animation: terminal-blink 1s step-end infinite;
+}
+
+/* Glassmorphism utilities */
+.glass {
+  @apply backdrop-blur-xl;
+  background: hsla(var(--card), 0.6);
+  border-color: hsla(var(--foreground), 0.08);
+}
+
+.glass-heavy {
+  @apply backdrop-blur-2xl;
+  background: hsla(var(--card), 0.75);
+  border-color: hsla(var(--foreground), 0.1);
+}
+
+.glass-subtle {
+  @apply backdrop-blur-md;
+  background: hsla(var(--card), 0.4);
+  border-color: hsla(var(--foreground), 0.06);
+}
+
+/* ── Noise texture overlay ── */
+.noise-bg::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 256px 256px;
+}
+
+/* ── Dot grid background ── */
+.dot-grid {
+  background-image: radial-gradient(circle, hsl(var(--foreground) / 0.08) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+.dark .dot-grid {
+  background-image: radial-gradient(circle, hsl(var(--foreground) / 0.06) 1px, transparent 1px);
+}
+@media (max-width: 640px) {
+  .dot-grid {
+    background-size: 20px 20px;
+  }
+  .noise-bg::before {
+    opacity: 0.02;
+  }
+}
+
+/* ── Glow border on hover ── */
+@keyframes glow-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 hsl(var(--primary) / 0); }
+  50% { box-shadow: 0 0 16px 2px hsl(var(--primary) / 0.25); }
+}
+
+.glow-hover {
+  transition: box-shadow 0.3s ease;
+}
+.glow-hover:hover {
+  box-shadow: 0 0 20px 2px hsl(var(--primary) / 0.2), inset 0 0 0 1px hsl(var(--primary) / 0.15);
+}
+
+/* Animated glow (always pulsing) */
+.glow-animate {
+  animation: glow-pulse 3s ease-in-out infinite;
+}
+
+/* ── Animated gradient border ── */
+@keyframes border-glow {
+  0%, 100% { border-color: hsl(var(--border)); }
+  50% { border-color: hsl(var(--primary) / 0.5); }
+}
+.border-glow-hover:hover {
+  animation: border-glow 2s ease-in-out infinite;
+}
+
+/* Monospace utility classes */
+.font-mono-heading {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Override prose for BRD content */
+.prose {
+  --tw-prose-body: hsl(var(--foreground));
+  --tw-prose-headings: hsl(var(--foreground));
+  --tw-prose-links: hsl(var(--primary));
+  --tw-prose-bold: hsl(var(--foreground));
+  --tw-prose-code: hsl(var(--primary));
+  --tw-prose-quotes: hsl(var(--muted-foreground));
+  --tw-prose-th-borders: hsl(var(--border));
+  --tw-prose-td-borders: hsl(var(--border));
+}
+
+.dark .prose {
+  --tw-prose-invert-body: hsl(var(--foreground));
+  --tw-prose-invert-headings: hsl(var(--foreground));
+  --tw-prose-invert-links: hsl(var(--primary));
+}
+
+/* ── BRD content enhancements ── */
+.brd-content .brd-table {
+  border-collapse: collapse;
+}
+.brd-content .brd-table tbody tr:nth-child(even) {
+  background: hsl(var(--muted) / 0.3);
+}
+.dark .brd-content .brd-table tbody tr:nth-child(even) {
+  background: hsl(var(--muted) / 0.2);
+}
+
+/* Disable heavy default prose table styles inside BRD */
+.brd-content table {
+  margin: 0 !important;
+}
+.brd-content thead th {
+  border-bottom: none !important;
+}
+.brd-content tbody td {
+  border-bottom: none !important;
+}
+
+/* Remove default prose margins for nested BRD lists */
+.brd-content ul, .brd-content ol {
+  padding-left: 1.25rem;
+}
+.brd-content li {
+  margin-top: 0.15rem;
+  margin-bottom: 0.15rem;
+}
